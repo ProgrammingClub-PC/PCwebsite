@@ -8,6 +8,7 @@ import {
   AiOutlineHome,
   AiOutlineFundProjectionScreen,
   AiOutlineUser,
+  AiOutlineRead,
 } from "react-icons/ai";
 
 function NavBar() {
@@ -74,6 +75,16 @@ function NavBar() {
                   style={{ marginBottom: "2px" }}
                 />{" "}
                 Achievements
+              </Nav.Link>
+            </Nav.Item>
+
+            <Nav.Item>
+              <Nav.Link
+                as={Link}
+                to="/editorials"
+                onClick={() => updateExpanded(false)}
+              >
+                <AiOutlineRead style={{ marginBottom: "2px" }} /> Editorials
               </Nav.Link>
             </Nav.Item>
 
