@@ -5,6 +5,8 @@ import Home from "./components/Home/Home";
 import About from "./components/About/About";
 import Footer from "./components/Footer";
 import Members from "./components/Members/Members";
+import EditorialList from "./components/Editorials/EditorialList";
+import EditorialDetail from "./components/Editorials/EditorialDetail";
 import EventRegisteration from "./components/eventRegisteration"; 
 // import EventPopup from "./components/EventPopup";
 
@@ -41,6 +43,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/editorials" element={<EditorialList />} />
+          <Route path="/editorials/:slug" element={<EditorialDetail />} />
           <Route path="/members" element={<Members />} />
           {/* <Route path="/register" element={<EventRegisteration />} /> */}
 
