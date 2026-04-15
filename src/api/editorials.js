@@ -1,5 +1,5 @@
 const API_BASE_URL =
-  process.env.REACT_APP_EDITORIALS_API_BASE_URL || "https://monu14.me/api";
+  process.env.REACT_APP_EDITORIALS_API_BASE_URL || "https://editorial.monu14.me/api";
 
 function getEndpoint(pathname) {
   return `${API_BASE_URL.replace(/\/$/, "")}${pathname}`;
