@@ -20,6 +20,118 @@ function formatDate(value) {
   }
 }
 
+const CODE_KEYWORDS = new Set([
+  "auto",
+  "bool",
+  "break",
+  "case",
+  "catch",
+  "char",
+  "class",
+  "const",
+  "continue",
+  "default",
+  "delete",
+  "do",
+  "double",
+  "else",
+  "enum",
+  "extern",
+  "false",
+  "float",
+  "for",
+  "friend",
+  "if",
+  "inline",
+  "int",
+  "long",
+  "namespace",
+  "new",
+  "null",
+  "private",
+  "protected",
+  "public",
+  "return",
+  "short",
+  "signed",
+  "sizeof",
+  "static",
+  "struct",
+  "switch",
+  "template",
+  "this",
+  "throw",
+  "true",
+  "try",
+  "typedef",
+  "typename",
+  "union",
+  "unsigned",
+  "using",
+  "virtual",
+  "void",
+  "while",
+]);
+
+function tokenizeCode(source) {
+  if (!source) {
+    return [];
+  }
+
+  const tokens = [];
+  const tokenMatcher =
+    /\/\/.*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|#\w+|\b\d+(?:\.\d+)?\b|[(){}\[\]]|\b[A-Za-z_]\w*\b/g;
+  let lastIndex = 0;
+  let match = tokenMatcher.exec(source);
+
+  while (match) {
+    const [value] = match;
+    const start = match.index;
+
+    if (start > lastIndex) {
+      tokens.push({
+        type: "plain",
+        value: source.slice(lastIndex, start),
+      });
+    }
+
+    let type = "plain";
+
+    if (value.startsWith("//") || value.startsWith("/*")) {
+      type = "comment";
+    } else if (
+      (value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'")) ||
+      (value.startsWith("`") && value.endsWith("`"))
+    ) {
+      type = "string";
+    } else if (value.startsWith("#")) {
+      type = "preprocessor";
+    } else if (/^\d/.test(value)) {
+      type = "number";
+    } else if (/^[(){}\[\]]$/.test(value)) {
+      type = "bracket";
+    } else if (CODE_KEYWORDS.has(value)) {
+      type = "keyword";
+    } else if (/^[A-Za-z_]\w*$/.test(value)) {
+      type = "identifier";
+    }
+
+    tokens.push({ type, value });
+    lastIndex = start + value.length;
+    match = tokenMatcher.exec(source);
+  }
+
+  if (lastIndex < source.length) {
+    tokens.push({
+      type: "plain",
+      value: source.slice(lastIndex),
+    });
+  }
+
+  return tokens;
+}
+
 function EditorialDetail() {
   const { slug } = useParams();
   const [editorial, setEditorial] = useState(null);
@@ -138,7 +250,22 @@ function EditorialDetail() {
 
                       <div className="editorial-content-block">
                         <h3>Code</h3>
-                        <pre>{question.code || "No code added yet."}</pre>
+                        {question.code ? (
+                          <pre className="editorial-code-block">
+                            <code>
+                              {tokenizeCode(question.code).map((token, tokenIndex) => (
+                                <span
+                                  key={`${question.id || index}-${tokenIndex}`}
+                                  className={`token token-${token.type}`}
+                                >
+                                  {token.value}
+                                </span>
+                              ))}
+                            </code>
+                          </pre>
+                        ) : (
+                          <pre>No code added yet.</pre>
+                        )}
                       </div>
                     </div>
                   </details>
