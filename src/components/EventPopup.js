@@ -26,9 +26,9 @@ function EventPopup() {
     <Modal
       show={show}
       onHide={handleClose}
-      size="lg" // lg se thoda chota kiya taaki compact aur pyara lage
+      size="lg" 
       centered
-      className="custom-tech-modal" // 👈 Nayi class lagayi hai
+      className="custom-tech-modal" 
     >
       <Modal.Header closeButton className="modal-header-custom">
         <Modal.Title className="modal-title-custom">🚨 Alert: Upcoming Event</Modal.Title>
